@@ -1,20 +1,30 @@
 var radius;
 var hueCycles = 6;
-var numLines = 1;
+var numLines = 3;
 var lineThickness = 1;
-var lineAlpha = 0.5;
+var lineAlpha = 50;
 var spanPower = 1;
+var hueOffset = 0;
+
 
 function setup() {
-	createCanvas(windowWidth, windowHeight);
-	radius = min(windowWidth, windowHeight) / 2 - 20;
-	colorMode(HSB, 255);
+	radius = min(windowWidth, windowHeight) / 2;
+	createCanvas(2 * radius, 2 * radius);
+	colorMode(HSB, 1);
+}
+
+function windowResized() {
+	let newRadius = min(windowWidth, windowHeight) / 2;
+	if (radius !== newRadius) {
+  		resizeCanvas(windowWidth, windowHeight);
+  	}
+  	radius = newRadius;
 }
 
 function draw() {
 	translate(width/2, height/2);
 	coords = getCoords();
-	if (!mouseIsPressed) {
+	if (shouldDraw()) {
 		makeLines(coords);
 	}
   	drawBorder();
@@ -24,7 +34,7 @@ function drawBorder() {
 	let r = 2000;
 	push();
 	// stroke(getColor(getCoords()));
-	stroke(0);
+	stroke(255);
 	noFill();
 	strokeWeight(r - 2*radius);
 	ellipse(0, 0, r, r);
@@ -46,11 +56,10 @@ function getColor(coords) {
 	if (coords.r > radius) {
 		return color(0, 0, 0, 255);
 	}
-	let th = (hueCycles * coords.th) % TWO_PI
-	h = 255 * th / TWO_PI;
-	s = 255 * sqrt(coords.r / radius);
-	b = 255 * (0.5 + 0.5 * sqrt(coords.r / radius));
-	a = 255 * lineAlpha;
+	h = (hueCycles * (coords.th / TWO_PI + 1.75) - hueOffset / 360.0) % 1.0
+	s = sqrt(coords.r / radius);
+	b = (0.5 + 0.5 * sqrt(coords.r / radius));
+	a = lineAlpha / 100.0;
 	return color(h, s, b, a);
 }
 
@@ -81,22 +90,14 @@ function makeLines(coords) {
 	pop();
 }
 
-function mouseReleased() {
-	coords = getCoords();
-	if (coords.r > radius) {
-		background(255);
-	}
+
+function shouldDraw() {
+	return !mouseIsPressed;
 }
 
-// function keyReleased() {
-// 	return;
-// 	if (keyCode === ESCAPE) {
-// 		fullscreen(!fullscreen());
-// 		if fullscreen() {
-// 			createCanvas(displayWidth, displayHeight);
-// 		} else {
-// 			createCanvas(windowWidth, windowHeight);
-// 		}
-// 	}
-// }
+function keyReleased() {
+	if (keyCode === ESCAPE) {
+		fullscreen(!fullscreen());
+	}
+}
 
