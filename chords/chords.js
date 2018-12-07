@@ -97,7 +97,7 @@ function makeLines(coords) {
 }
 
 function shouldDraw() {
-	return !mouseIsPressed || touches.length;
+	return touches.length || !mousePressed;
 }
 
 function keyReleased() {
