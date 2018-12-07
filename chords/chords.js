@@ -1,6 +1,6 @@
 var radius;
 var hueCycles = 6;
-var numLines = 3;
+var numLines = 4;
 var lineThickness = 1;
 var lineAlpha = 50;
 var spanPower = 1;
@@ -20,7 +20,6 @@ function clearCircle() {
 }
 
 function windowResized() {
-	console.log("RESIZED");
 	let newRadius = min(windowWidth, windowHeight) / 2;
 	if (radius !== newRadius) {
   		resizeCanvas(windowWidth, windowHeight);
@@ -97,14 +96,12 @@ function makeLines(coords) {
 	pop();
 }
 
-
 function shouldDraw() {
-	return !mouseIsPressed;
+	return !mouseIsPressed || touches.length;
 }
 
 function keyReleased() {
 	if (keyCode === ESCAPE) {
-		console.log("FULLSCREENED");
 		fullscreen(!fullscreen());
 	}
 }
