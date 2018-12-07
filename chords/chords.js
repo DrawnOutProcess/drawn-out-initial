@@ -11,18 +11,25 @@ function setup() {
 	radius = min(windowWidth, windowHeight) / 2;
 	createCanvas(2 * radius, 2 * radius);
 	colorMode(HSB, 1);
+	clearCircle();
+}
+
+function clearCircle() {
+	background(255);
+	drawBorder();
 }
 
 function windowResized() {
+	console.log("RESIZED");
 	let newRadius = min(windowWidth, windowHeight) / 2;
 	if (radius !== newRadius) {
   		resizeCanvas(windowWidth, windowHeight);
+  		radius = newRadius;
+  		clearCircle();
   	}
-  	radius = newRadius;
 }
 
 function draw() {
-	translate(width/2, height/2);
 	coords = getCoords();
 	if (shouldDraw()) {
 		makeLines(coords);
@@ -31,10 +38,10 @@ function draw() {
 }
 
 function drawBorder() {
-	let r = 2000;
+	let r = 10000;
 	push();
-	// stroke(getColor(getCoords()));
-	stroke(255);
+	translate(width/2, height/2);
+	stroke(0);
 	noFill();
 	strokeWeight(r - 2*radius);
 	ellipse(0, 0, r, r);
@@ -54,7 +61,7 @@ function getCoords() {
 
 function getColor(coords) {
 	if (coords.r > radius) {
-		return color(0, 0, 0, 255);
+		return color(0, 0, 0, 1);
 	}
 	h = (hueCycles * (coords.th / TWO_PI + 1.75) - hueOffset / 360.0) % 1.0
 	s = sqrt(coords.r / radius);
@@ -80,7 +87,7 @@ function makeLines(coords) {
 	}
 	span = getAngleSpan(coords);
 	push();
-	translate(coords.x, coords.y);
+	translate(coords.x + width/2, coords.y + height/2);
 	rotate(coords.th);
 	strokeWeight(lineThickness);
 	stroke(getColor(coords));
@@ -97,6 +104,7 @@ function shouldDraw() {
 
 function keyReleased() {
 	if (keyCode === ESCAPE) {
+		console.log("FULLSCREENED");
 		fullscreen(!fullscreen());
 	}
 }
