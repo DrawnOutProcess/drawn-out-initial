@@ -1,6 +1,8 @@
 var radius;
+var lastMillis = 0;
+
 var hueCycles = 6;
-var numLines = 4;
+var lineSpeed = 500;
 var lineThickness = 1;
 var lineAlpha = 50;
 var spanPower = 1;
@@ -29,9 +31,10 @@ function windowResized() {
 }
 
 function draw() {
-	coords = getCoords();
+	let ellapsed = getEllapsedTime();
+	let coords = getCoords();
 	if (shouldDraw()) {
-		makeLines(coords);
+		makeLines(coords, ellapsed);
 	}
   	drawBorder();
 }
@@ -73,6 +76,22 @@ function getAngleSpan(coords) {
 	return PI * ((radius - coords.r) / radius) ** spanPower;
 }
 
+function getEllapsedTime() {
+	let nextMillis = millis();
+	let ellapsed = nextMillis - lastMillis;
+	lastMillis = nextMillis;
+	return ellapsed / 1000.0;
+}
+
+function getNumLines(ellapsed) {
+	let factor = ellapsed * lineSpeed;
+	let numLines = floor(factor);
+	if (random(0, 1) < factor % 1) {
+		numLines += 1;
+	}
+	return numLines;
+}
+
 function drawLine(span) {
 	push();
 	rotate(random(-span/2, span/2));
@@ -80,10 +99,11 @@ function drawLine(span) {
 	pop();
 }
 
-function makeLines(coords) {
+function makeLines(coords, ellapsed) {
 	if (coords.r > radius) {
 		return;
 	}
+	numLines = getNumLines(ellapsed);
 	span = getAngleSpan(coords);
 	push();
 	translate(coords.x + width/2, coords.y + height/2);
