@@ -1,4 +1,5 @@
 var radius;
+var sliders;
 var lastMillis = 0;
 
 var hueCycles = 6;
@@ -6,14 +7,18 @@ var lineSpeed = 500;
 var lineThickness = 1;
 var lineAlpha = 50;
 var spanPower = 1;
+var colorPower = 2;
 var hueOffset = 0;
 
 
 function setup() {
 	radius = min(windowWidth, windowHeight) / 2;
-	createCanvas(2 * radius, 2 * radius);
+	canvas = createCanvas(2 * radius, 2 * radius);
+	canvas.parent("main");
 	colorMode(HSB, 1);
 	clearCircle();
+	makeTheButtons();
+	makeTheSliders();
 }
 
 function clearCircle() {
@@ -21,20 +26,19 @@ function clearCircle() {
 	drawBorder();
 }
 
-function windowResized() {
+function resizeCircle() {
 	let newRadius = min(windowWidth, windowHeight) / 2;
-	if (radius !== newRadius) {
-  		resizeCanvas(windowWidth, windowHeight);
-  		radius = newRadius;
-  		clearCircle();
-  	}
+  	resizeCanvas(windowWidth, windowHeight);
+  	radius = newRadius;
+  	clearCircle();
 }
 
 function draw() {
 	let ellapsed = getEllapsedTime();
 	let coords = getCoords();
+	let settings = getSettings();
 	if (shouldDraw()) {
-		makeLines(coords, ellapsed);
+		makeLines(coords, settings, ellapsed);
 	}
   	drawBorder();
 }
@@ -61,19 +65,19 @@ function getCoords() {
 	};
 }
 
-function getColor(coords) {
+function getColor(coords, settings) {
 	if (coords.r > radius) {
 		return color(0, 0, 0, 1);
 	}
-	h = (hueCycles * (coords.th / TWO_PI + 1.75) - hueOffset / 360.0) % 1.0
-	s = sqrt(coords.r / radius);
-	b = (0.5 + 0.5 * sqrt(coords.r / radius));
-	a = lineAlpha / 100.0;
+	h = (settings.hueCycles * (coords.th / TWO_PI + 1.75) - settings.hueOffset / 360.0) % 1.0
+	s = pow(coords.r / radius, 1.0 / settings.colorPower);
+	b = (0.5 + 0.5 * pow(coords.r / radius, 1.0 / settings.colorPower));
+	a = settings.lineAlpha / 100.0;
 	return color(h, s, b, a);
 }
 
 function getAngleSpan(coords) {
-	return PI * ((radius - coords.r) / radius) ** spanPower;
+	return PI * pow((radius - coords.r) / radius, spanPower);
 }
 
 function getEllapsedTime() {
@@ -99,7 +103,7 @@ function drawLine(span) {
 	pop();
 }
 
-function makeLines(coords, ellapsed) {
+function makeLines(coords, settings, ellapsed) {
 	if (coords.r > radius) {
 		return;
 	}
@@ -108,12 +112,16 @@ function makeLines(coords, ellapsed) {
 	push();
 	translate(coords.x + width/2, coords.y + height/2);
 	rotate(coords.th);
-	strokeWeight(lineThickness);
-	stroke(getColor(coords));
+	strokeWeight(settings.lineThickness);
+	stroke(getColor(coords, settings));
 	for (let i = 0; i < numLines; i++) {
 		drawLine(span);
 	}
 	pop();
+}
+
+function toggleFullscreen() {
+	fullscreen(!fullscreen());
 }
 
 function shouldDraw() {
@@ -121,8 +129,53 @@ function shouldDraw() {
 }
 
 function keyReleased() {
-	if (keyCode === ESCAPE) {
-		fullscreen(!fullscreen());
-	}
+	// if (keyCode === ESCAPE) {
+	// 	toggleFullscreen();
+	// }
 }
 
+function makeTheButtons() {
+	let button;
+    
+    button = createButton("Reset");
+    button.mouseClicked(resizeCircle);
+    button.parent("right");
+    button.position(20, 20);
+    
+    button = createButton("Full Screen");
+	button.mouseClicked(toggleFullscreen);
+    button.parent("right");
+    button.position(20, 40);
+}
+
+
+function makeTheSliders() {
+	sliders = {};
+	sliders.hueCycles = createSlider(0, 36, 6, 1);
+	sliders.hueCycles.position(20, 60);
+	sliders.hueOffset = createSlider(0, 360, 0, 1);
+	sliders.hueOffset.position(20, 180);
+	sliders.lineSpeed = createSlider(1, 10000, 1000);
+	sliders.lineSpeed.position(20, 80);
+	sliders.lineThickness = createSlider(1, 20, 1, 1);
+	sliders.lineThickness.position(20, 100);
+	sliders.lineAlpha = createSlider(1, 100, 50, 1);
+	sliders.lineAlpha.position(20, 120);
+	sliders.spanPower = createSlider(0.1, 10, 1, 0.1);
+	sliders.spanPower.position(20, 140);
+	sliders.colorPower = createSlider(0.1, 10, 2, 0.1);
+	sliders.colorPower.position(20, 160);
+
+}
+
+function getSettings() {
+	return {
+		hueCycles: sliders.hueCycles.value(),
+		lineSpeed: sliders.lineSpeed.value(),
+		lineThickness: sliders.lineThickness.value(),
+		lineAlpha: sliders.lineAlpha.value(),
+		spanPower: sliders.spanPower.value(),
+		colorPower: sliders.colorPower.value(),
+		hueOffset: sliders.hueOffset.value()
+	}
+}
