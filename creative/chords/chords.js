@@ -2,14 +2,6 @@ var radius;
 var sliders;
 var lastMillis = 0;
 
-var hueCycles = 6;
-var lineSpeed = 500;
-var lineThickness = 1;
-var lineAlpha = 50;
-var spanPower = 1;
-var colorPower = 2;
-var hueOffset = 0;
-
 
 function setup() {
 	radius = min(windowWidth, windowHeight) / 2;

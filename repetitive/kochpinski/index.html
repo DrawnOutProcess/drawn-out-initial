@@ -4,9 +4,18 @@
     <link rel="stylesheet" href="/static/styles/main.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="/static/scripts/resize.js"></script>
+    <script src="/static/scripts/sidenav.js"></script>
   </head>
   <body>
+    <div id="mySidenav" class="sidenav">
+      <a href="/">Home</a>
+      <a href="/creative">Creative</a>
+      <a href="/creative/chords">Chords</a>
+      <a href="/repetitive">Repetitive</a>
+      <a href="/repetitive/kochpinski">Kochpinski</a>
+      <a href="/repetitive/snowflake">Snowflake</a>
+    </div>
     <div class="fill-screen">
-      <img class="fit-square" src="/static/gifs/kochpinski.gif"></img>
+      <img class="fit-square" src="/static/gifs/kochpinski.gif" onclick="openNav()"></img>
   </body>
 </html>
