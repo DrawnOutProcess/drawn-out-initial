@@ -14,7 +14,7 @@ var hueOffset = 0;
 function setup() {
 	radius = min(windowWidth, windowHeight) / 2;
 	canvas = createCanvas(2 * radius, 2 * radius);
-	canvas.parent("main");
+	canvas.parent("canvas-container");
 	colorMode(HSB, 1);
 	clearCircle();
 	makeTheButtons();
@@ -139,12 +139,10 @@ function makeTheButtons() {
     
     button = createButton("Reset");
     button.mouseClicked(resizeCircle);
-    button.parent("right");
     button.position(20, 20);
     
     button = createButton("Full Screen");
 	button.mouseClicked(toggleFullscreen);
-    button.parent("right");
     button.position(20, 40);
 }
 
