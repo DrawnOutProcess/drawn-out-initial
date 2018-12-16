@@ -1,0 +1,63 @@
+.sidenav {
+  height: 100%;
+  width: 30px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #330033;
+  opacity: 0;
+  overflow-x: hidden;
+  transition: 1s;
+  padding-top: 60px;
+}
+
+.sidenav a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #ff7700;
+  display: block;
+  transition: 0.5s;
+  width: 0;
+}
+
+.sidenav a:hover {
+  color: #f1f1f1;
+}
+
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+.tab {
+  display: flex;
+  position: fixed;
+  font-size: 40px;
+  color: white;
+  cursor: pointer;
+  align-items: center;
+  width: 30px;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  transition: 1s;
+}
+
+.tab span {
+  display: block;
+  transition: 1s;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}

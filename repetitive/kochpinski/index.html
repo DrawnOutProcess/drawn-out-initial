@@ -7,15 +7,10 @@
     <script src="/static/scripts/sidenav.js"></script>
   </head>
   <body>
-    <div id="mySidenav" class="sidenav">
-      <a href="/">Home</a>
-      <a href="/creative">Creative</a>
-      <a href="/creative/chords">Chords</a>
-      <a href="/repetitive">Repetitive</a>
-      <a href="/repetitive/kochpinski">Kochpinski</a>
-      <a href="/repetitive/snowflake">Snowflake</a>
-    </div>
+    <link rel="import" href="/static/markup/navigation.html">
     <div class="fill-screen">
-      <img class="fit-square" src="/static/gifs/kochpinski.gif" onclick="openNav()"></img>
+      <video class="fit-square" autoplay muted loop>
+        <source src="/static/videos/kochpinski.mp4" type="video/mp4" onclick="openNav()">
+      </video>
   </body>
 </html>
